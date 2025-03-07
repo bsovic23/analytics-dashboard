@@ -38,6 +38,29 @@ export interface WildApricotData {
     'Level last changed': string,  
 }
 
+export interface SurveyData {
+    "firstName": string,
+    "lastName": string,
+    'email': string,
+    'membershipType': string,
+    'membershipLength': string,
+    'recommend': number,
+    'learnAbout': string,
+    'loginAmount': string,
+    'features': string,
+    'benefits': string,
+    'educationFormat': string,
+    'events': string,
+    'socialMedia': string,
+    'newsletter': string,
+    'communications': number,
+    'notCovered': string,
+    'satisfiedService': string,
+    'patientsSee': string,
+    'patientResources': string,
+    'memberAssociations': string,
+}
+
 export interface WildApricotPrevContacts {
     id: string;
 }

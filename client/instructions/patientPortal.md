@@ -19,80 +19,38 @@ Sandy 11/22 email
 2. Data Merge, Clean and/or Rules
 -----------------------------
 
-V5.0 -> Meeting January 8th 2025: Discuss the updates / changes made below (along with any further comments post Brit coding changes for V5.0)
+1. What automated metrics are you interested in having?
+    [] Monthly completion % ?  
+    [] Monthly Counts of surveys completed     
+    [] Counts of certain variables (ie are certain demographics represented, certain populations, certain types of kidney disease, etc)
 
-- [] Create a 'rules' document that notes any changes for survey (for now it seems like core survey only one that needs changes)
+2. Comorbidities is not a specific question? (did you mean like you want every single cause variable cancer, hyptertention, diabetes, transplants, cardiovascular etc etc )
+    []
 
-- [] Can we also add the KDQoL-36 data to the Merged Datasets?
-    - () No score documents in the most recent data pulls
+3. Structure of combo dataset updates
+    [] Tab 1: The combodataset
+    [] Tab 2: Demographics (the tables of stats Sandy wanted)
+    [] Tab 3: Dashboard (This will be the tables of the stats that are more so related to retention/completion etc)
 
-- [] Add the scores data sheets for eq5d5l and kdqol now added in the shared folders document, for now add all of the columns/data variables for each of the datasets
+    [] Tab2.5: If Sandy wants to look at the Demographics to be filtered by certain variables, it replicates the tables but filters based on the specific variable(s)
 
-- [x] created age variable using the date of birth
-    - () Created current age (As years go by dataset can be filtered for current age population if needed by pharma/study etc)
-    - () Created age at registration (used for demogrpahic analytics for analysis/stats)
+4. Updates to "Tab 2" Tables
+    [] Add % for the counts
+    [] Each table should be sorted by highest to lowest %
+    [] Add a 'total' category for each table so can see what the cateogry N is (maybe instead of total row create it to dynamically next to the title with (N=23)) etc
+    [] for the kidney counts use c_organsTrasnplant and only kidney
+    [] For null answers (or just each table) may have to use other questiosn for like y/n so that nulls are not included becasue those are people that didnt get shownt the ?
+    [] Bold the Title if possible for the 'table title'
 
-1. Are there certain core survey questions that dont matter if they change (aka should change) so not needing rule writing
-       vs
-    Are there certain core survey questiosn that DO matter if they change (aka something that shouldnt necessarily change) so needing rule writing
+5. Updates to "Tab 1" combodataset
+    [] Add KDQOL / EQ5D5L Scores
 
-    [] create another excel doc with just 1 core survey (that is cleaned based on certain core survey question cleaning) 
-
-    [] The most recent answer is the correct / accurate  (for any sort of start and stop - lifestyle choices (most recent answer in the survey is the 'correct' one))
-    [] Location: most recent answer is the best, we can assume they moved
-    [] Employment Status, Education Status, if they changed then that is considered an update the their status
-
-2. What automated metrics are you interested in having?
-    [] Monthly completion % ?  YES INCORPORATE INTO THE STATS
-    [] Monthyl Counts of surveys completed     YES INCORPORATE INTO THE STATS
-    [] Counts of certain variables (ie are certain demographics represented, certain populations, certain types of kidney disease, etc)      YES INCORPORATE INTO THE STATS -> AUTO RUN
-    [] Casue of CKD by month ? (X number of cuyase joined each month)
-
-3. Pre-emptively write code to check completion percentage of pre/post a certain date based on when Sandy implrements new outreach email method -> Just need the date whenever that happens
-    [x][TBD January] SUBMITTED FOR irb reviw, to tbd january
-
-4. [] Order of the surveys
-    i. Registration
-    ii. ICF
-    iii. core
-    iv. eq5d5l
-    v. kdqol
-
-5. [] map 
-    - detailed information -> cause of ckd
-    - demographics (race/ethnicity, gender)
 
 -----------------------------
-3. kdqol Issues with scoring/code/answers Brit troubleshoot
------------------------------
-
-* kdqol
-    - kdq36 is the one being used (issue potentially with variable 12, SAS code provided)
-    * re code based on the question missing 
-
-
-* KDQOL scores row G some are above 102 (some may be under 100) based on two columns of answers in the survey: AC / AD (HEMODIALYSIS_PATIENT_ONLY_PROBLEMS_WITH_YOUR_ACCESS_SITE	PERITONEAL_DIALYSIS_PATIENT_ONLY_PROBLEMS_WITH_YOUR_CATHETER_SITE)
-    - FIGURE out: why the scoring is high / scoring weight of the variables
-    - maybe based on core survey whether on hemodialuysis patient or peritoneal dialysis
-    - look at the scoring potential based on if on dialysis vs not on dialysis
-
-
-* KDQOL and EQ5D5L run QAQC on the scores to see if they are accurate or not accurate (and if not accurate what variables are causing issues)
-
------------------------------
-4. To Do
+3. Extra
 -----------------------------
 
 - Data Rule Chance Guide that I made (is format correct / columns)
-
-- I rename variables with a prefix / shorter variable name for my benefit (I know what form the variable from, short and sweet variables)
-    [x] Keep my way prefix + camelCasing: core_bloodCreatinineUnit
-    [] keep prefix but have the old variable name ex: core_WHAT_IS_THE_UNIT_USED_IN_THE_BLOOD_CREATININE_TEST_RESULT
-    [] Go back to the old variable name: WHAT_IS_THE_UNIT_USED_IN_THE_BLOOD_CREATININE_TEST_RESULT
-
-- Do you have the stat numbers for completion ? I would like to compare vs my stats, I know they may not be exact
-since yours might be delayed, but i just want to make sure im in the realm to ensure theres no code issue on my end
-        Will get the numbers via the downloads Sandy sends
 
 - Send top 50 list (non-lab value variables) of all 'changed variables' to review for rules
     * Meeting with Sandy (include the counts of how often the 'change' is happening) and include rule change logic
@@ -106,4 +64,6 @@ Current Combo Versions:
 4. CREATE also a dataset that can be used for the interactive dashboard built
 
 * Map + Charts/stats will be available next week if you need another up to date dataset by like Friday
+    - detailed information -> cause of ckd
+    - demographics (race/ethnicity, gender)
 

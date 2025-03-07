@@ -37,6 +37,15 @@ import {
 
     // V10.0
     zipDistanceFx,
+
+    // V11.0
+    v11Table,
+    v11TableFollowUp,
+    v11FollowUpCountsNew,
+    v11TableMegan,
+
+    // Additional Asks
+    
 } from '../functions/affiniaFx';
 
 // Data Imports
@@ -109,6 +118,12 @@ const Affinia = () => {
     // V10.0
     const [zipDistance, setZipDistance] = useState((allMedicationData !== 'No Affinia Data Found') ? (zipDistanceFx(allZipInsurance, postInterventionData)) : 'No Survey Monkey Data Found');
 
+    // V11.0
+    const [followUpV11table, setV11table] = useState((postInterventionData !== 'No Affinia Data Found') ? (v11Table(postInterventionData)) : 'No Affinia Data Found');
+    const [followUpV11tableFollowUp, setV11tableFollowUp] = useState((postFollowUpInterventionData !== 'No Affinia Data Found') ? (v11TableFollowUp(postFollowUpInterventionData)) : 'No Affinia Data Found');
+    const [followUpCountsNewFollowUp, setFollowUpCountsNewFollowUp] = useState((postFollowUpInterventionData !== 'No Affinia Data Found') ? (v11FollowUpCountsNew(postFollowUpInterventionData)) : 'No Affinia Data Found');
+    const [v11TableMeganResult, setV11tableMegan] = useState((postInterventionData !== 'No Affinia Data Found') ? (v11TableMegan(postInterventionData, postFollowUpInterventionData)) : 'No Affinia Data Found');
+
     // -----------------
     // ANALYSIS BUTTONS
     // -----------------  
@@ -132,9 +147,13 @@ const Affinia = () => {
         { id: 15, "name": "ZIP and Insurance Class counts for test returned", "data": followUpV9 },
         { id: 16, "name": "Ethnicity count comp vs non comp", "data": followUpV9eth },
         { id: 17, "name": "Follow Up Table follow up completed only", "data": followUpV9table },
-
         // V10.0
         { id: 18, "name": "Zip Dsitance", "data": zipDistance },
+        // V11.0
+        { id: 20, "name": "FINAL V11.0: All 1425 who returned test", "data": followUpV11table },
+        { id: 21, "name": "FINAL V11.0: All with Follow Up Data", "data": followUpV11tableFollowUp },
+        { id: 22, "name": "FINAL V11.0: New Follow Up Counts", "data": followUpCountsNewFollowUp },
+        { id: 23, "name": "FINAL V11.0: Megan Table", "data": v11TableMeganResult },
     ];
 
 

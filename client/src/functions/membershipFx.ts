@@ -4,7 +4,12 @@
 
 //  Interface Imports
 
-import { WildApricotData, WildApricotDups, WildApricotMembershipLapsed } from '../typeScript/membership'
+import { 
+    WildApricotData, 
+    WildApricotDups, 
+    WildApricotMembershipLapsed,
+    SurveyData,
+} from '../typeScript/membership'
 
 // =======================================================================================================================================
 // Wild Apricot Repeated Clean Up Reports
@@ -312,12 +317,6 @@ export const activeMemberNewFx = (data: WildApricotData[]) => {
     return { totals: sortedTotals, membershipBreakdown: sortedMembershipBreakdown };
 };
 
-// New Lapsed Member Count
-
-export const lapsedMemberNewFx = (data: WildApricotData[]) => {
-
-};
-
 // WILD APRICOT Last Clicked
 
 export const newFunctions = (data: WildApricotData[]) => {
@@ -528,6 +527,7 @@ export const subscriptionSourceFx = (data: WildApricotData[]) => {
 };
 
 // Age Analysis
+
 export const ageAnalysisFx = (data: WildApricotData[]) => {
     const ages: number[] = [];
     const currentYear = new Date().getFullYear();
@@ -576,7 +576,6 @@ export const ageAnalysisFx = (data: WildApricotData[]) => {
         mode: modes, // Return all modes if there's a tie
     };
 };
-
 
 // Add on analysis
 
@@ -630,3 +629,46 @@ export const addOnAnalysisFx = (data: WildApricotData[]) => {
 
     return finalData;
 };
+
+
+// =======================================================================================================================================
+// Wild Apricot Analysis
+// =======================================================================================================================================
+
+export const membershipSurveyFx = (surveyData: SurveyData[]) => {
+    let finalData = {
+        featuresCount: {} as Record<string, number>,
+        benefitsCount: {} as Record<string, number>,
+        educationCount: {} as Record<string, number>,
+        eventsCount: {} as Record<string, number>,
+    };
+    
+    // Helper function that goes through the answers
+    const processCounts = (data: string | undefined, countObj: Record<string, number>) => {
+        if (!data) return;
+
+        const selections = data.split("\n").map(item=> item.trim());
+
+        for (const selection of selections) {
+            if (selection) {
+                countObj[selection] = (countObj[selection] || 0) + 1;
+            }
+        }
+    }
+
+    for (const obj of surveyData) {
+        const {
+            features,
+            benefits,
+            educationFormat,
+            events,
+        } = obj;
+
+        processCounts(features, finalData.featuresCount);
+        processCounts(benefits, finalData.benefitsCount);
+        processCounts(educationFormat, finalData.educationCount);
+        processCounts(events, finalData.eventsCount);
+    }
+
+    return finalData;
+}

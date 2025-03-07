@@ -27,15 +27,21 @@ import {
 
     addOnAnalysisFx,
 
+    // Membership Sruvey Functions
+    membershipSurveyFx,
+
 } from '../functions/membershipFx';
 
 // Data Imports
 let wildApricotData;
+let membershipSurveyData;
 
 try {
     wildApricotData = require('../data/membership').wildApricotData;
+    membershipSurveyData = require('../data/membership').membershipSurveyData;
 } catch (error) {
     wildApricotData = 'No data found';
+    membershipSurveyData = 'No data found';
 };
 
 
@@ -43,8 +49,8 @@ export const Membership = () => {
 
     // Variables
     const [dups, setDups] = useState((wildApricotData !== 'No data found') ? (wildApricotDupsFx(wildApricotData)) : 'No Wild Apricot Data');
-    const month = 12;
-    const year = 2024;
+    const month = 2;
+    const year = 2025;
     const fy = ['FY21', 'FY22', 'FY23', 'FY24', 'FY25'];
     const [lapsedData, setLapsedData] = useState((wildApricotData !== 'No data found') ? wildApricotMemberLapseFx(wildApricotData, month, year) : 'No Wild Apricot Data');
     const [trends, setTrends] = useState((wildApricotData !== 'No data found') ? (activeFyFx(wildApricotData)) : 'No Wild Apricot Data');
@@ -62,6 +68,8 @@ export const Membership = () => {
     const [countNew, setCountNew] = useState((wildApricotData !== 'No data found') ? (activeMemberNewFx(wildApricotData)) : 'No Wild Apricot Data');
 
     const [addOn, setAddOn] = useState((wildApricotData !== 'No data found') ? (addOnAnalysisFx(wildApricotData)) : 'No Wild Apricot Data');
+
+    const [surveyData, setSurveyData] = useState((membershipSurveyData !== 'No data found') ? (membershipSurveyFx(membershipSurveyData)) : 'No Wild Apricot Data');
 
     //Page Variables
     const pageTitle = 'Membership Analysis';
@@ -82,11 +90,14 @@ export const Membership = () => {
         {id: 11, "name": "Age stats", "data": age},
         {id: 12, "name": "Active mmeber count", "data": countNew},
         {id: 13, "name": "Add On Count", "data": addOn},
+
+        {id: 14, "name": "memberhsip survey counts", "data": surveyData},
     ];
     
     return(
         <section className='page' id='membership'>
             <Page pageTitle={pageTitle} buttons={analysisButtons} />
+            <GeneralAnalysisTable data={lapsedData} />
         </section>
     )
 };

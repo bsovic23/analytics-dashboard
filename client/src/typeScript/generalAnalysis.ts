@@ -47,3 +47,37 @@ export interface EgfrDups {
     followUpUACRDate: string;
     followUpUACRValue?: number;
   }
+
+
+
+  export interface AllData {
+    firstName: string,
+    lastName: string,
+    email: string,
+  }
+
+  export interface ModuleData {
+    courseComplete: boolean,
+    firstName: string,
+    lastName: string,
+    email: string,
+  }
+
+
+
+  export interface DialysisData {
+    state: string,
+    region: string,
+    county: string,
+    zip: number,
+    pdUsePct: number,
+    POPESTIMATE: number,
+    POPEST_MALE: number,
+    POPEST_FEM: number,
+    MEDIAN_AGE_TOT: number,
+    MEDIAN_AGE_MALE: number,
+    MEDIAN_AGE_FEM: number,
+    pdRanking: number,
+    populationRanking: number,
+    ageRanking: number,
+  }

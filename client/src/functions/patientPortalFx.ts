@@ -200,6 +200,8 @@ export interface NkfCleanData {
     kdqol_submittedDate?: string; // KDQOL date
     surveyTime?: number; // Time point: 0 = baseline, 1 = follow-up 6 months, etc.
 }
+ 
+// RE LOOK AT THE DATE FORMAT FOR THE EMTIRE SURVEYS
 
 export const patientPortalComboNew = (
     registration: NkfCleanData[],
@@ -285,3 +287,61 @@ export const patientPortalComboNew = (
 // ======================================================================================================================================
 // Function 5 - Combine Core Surveys into one based on rules, export core survey questions that SHOULD change into repeating survey
 // ======================================================================================================================================
+
+
+
+
+
+
+// ======================================================================================================================================
+// Function 6 - Stat Functions for counts
+// ======================================================================================================================================
+
+// Number of people by race 
+export const countByCategory = (data: any[], key: string) => {
+  return data.reduce((acc, obj) => {
+    const category = obj[key];
+    
+    if (obj.surveyTime === 0 && category && category.trim() !== "") {
+      // Split the category string by commas and trim each item
+      const categories = category.split(',').map((item: string) => item.trim());
+      
+      // Increment count for each individual category value
+      categories.forEach((cat: string) => {
+        if (cat) {
+          acc[cat] = (acc[cat] || 0) + 1;
+        }
+      });
+    }
+    
+    return acc;
+  }, {} as Record<string, number>);
+};
+
+// number of people who registered by age group
+export const ageFx = (data: any[], key: string) => {
+  return data.reduce((acc, obj) => {
+    const ageRegistration = obj[key];
+
+    function ageCategoryFx(age: number): string {
+      if (age >= 18 && age <= 29) return '18-29';
+      if (age >= 30 && age <= 39) return '30-39';
+      if (age >= 40 && age <= 49) return '40-49';
+      if (age >= 50 && age <= 59) return '50-59';
+      if (age >= 60 && age <= 69) return '60-69';
+      if (age >= 70 && age <= 80) return '70-80';
+      if (age > 80) return '>80';
+      else return `invalid age: ${age}`;
+    }
+      
+    if (obj.surveyTime === 0 && ageRegistration) {
+      const ageCategory = ageCategoryFx(ageRegistration);
+
+      acc[ageCategory] = (acc[ageCategory] || 0) +1;
+    }
+
+    return acc;
+  }, {} as Record<string,number>);
+}
+
+// Number of people by health insurance type

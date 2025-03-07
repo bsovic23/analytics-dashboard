@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 // Imports - Components/Pages
 import Page from '../components/Page';
 import GenerateExcelFileGeneral from '../components/GenerateExcelFileGeneral';
+import GeneralTable from '../components/GeneralTable';
 
 // Function Imports
 import { 
@@ -22,6 +23,9 @@ import {
     // Combine Cleaned Up Surveys
     patientPortalComboNew,
 
+    // Stat Functions
+    countByCategory,
+    ageFx,
 } from '../functions/patientPortalFx';
 
 // Data Imports
@@ -89,7 +93,22 @@ const PatientPortal = () => {
             return [];
         }
     });
+
+    // Stat Functions
     
+    const [raceData, setRaceData] = useState(countByCategory(comboData, 'c_race'));
+    const [ethnicityData, setEthnicityData] = useState(countByCategory(comboData, 'c_ethnicity'));
+    const [sexData, setSexData] = useState(countByCategory(comboData, 'reg_gender'));
+    const [ageData, setAgeData] = useState(ageFx(comboData, 'reg_ageRegistration'));
+    const [insuranceData, setInsuranceData] = useState(countByCategory(comboData, 'c_healthInsuranceType'));
+    const [ckdStageData, setCkdStageData] = useState(countByCategory(comboData, 'c_ckdCurrentStage'));
+    const [dialysisData, setDialysisData] = useState(countByCategory(comboData, 'c_dialysis'));
+    const [ckdCauseData, setCkdCauseData] = useState(countByCategory(comboData, 'c_knowCauseSelect'));
+
+    /*
+
+    
+    */
 
     // Analysis Buttons
     const analysisButtons = [
@@ -99,13 +118,28 @@ const PatientPortal = () => {
         { id: 4, "name": "Dups Data IDs - eq5d5l", "data": data4 },
         { id: 5, "name": "Core Survey Top variable differences", "data": variableRules },
         { id: 6, "name": "Cleaned Data Combo", "data": comboData },
-    ];
+        // Stat Functions
+        { id: 7, "name": "Race Data", "data": raceData },
+        { id: 8, "name": "Ethnicity Data", "data": ethnicityData },
+        { id: 9, "name": "Sex Data", "data": sexData },
+        { id: 10, "name": "Age Data", "data": ageData },
+    ];   
 
     return(
         <section class='page' id='patientPortal'>
-            <GenerateExcelFileGeneral generalData={comboData} />
-            <Page pageTitle={title} buttons={analysisButtons} />
-        </section>
+        <GeneralTable dataObjects={{
+            "Race Data": raceData,
+            "Ethnicity Data": ethnicityData,
+            "Sex Data": sexData,
+            "Age Data": ageData,
+            "Insurance Data": insuranceData,
+            "CKD Stage Data": ckdStageData,
+            "Dialysis Data": dialysisData,
+            "CKD Cause Data": ckdCauseData,
+        }} />
+        <Page pageTitle={title} buttons={analysisButtons} />
+        <GenerateExcelFileGeneral generalData={comboData} />
+    </section>
     )
 };
 

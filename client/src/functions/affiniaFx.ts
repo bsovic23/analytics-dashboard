@@ -1260,6 +1260,246 @@ export const zipDistanceFx = (zipData: AllZipInsurance[], testData: PostInterven
 
 
 // -----------------------------------------------------------------------------------------------------------------------------------------------
+// VERSION 11 FINAL TABLES
+// -----------------------------------------------------------------------------------------------------------------------------------------------
+
+export const v11Table = (data: PostInterventionData[]) => {
+    let finalData = {
+       a1: { g1: 0, g2: 0, g3a: 0, g3b: 0, g4: 0, g5: 0 },
+       a2: { g1: 0, g2: 0, g3a: 0, g3b: 0, g4: 0, g5: 0 },
+       a3: { g1: 0, g2: 0, g3a: 0, g3b: 0, g4: 0, g5: 0 },
+       egfrMissing: { a1: 0, a2: 0, a3: 0 },
+       uacrMissing: { g1: 0, g2: 0, g3a: 0, g3b: 0, g4: 0, g5: 0 },
+       missingBothLabs: 0,
+    };
+
+    for (const obj of data) {
+        const { post_uacr, eGFRValue } = obj;
+
+        if (post_uacr == null && eGFRValue == null) {
+            finalData.missingBothLabs++;
+        } else if (post_uacr == null) {
+            // Missing UACR, categorize based on eGFRValue
+            let gCategory: keyof typeof finalData.uacrMissing;
+            if (eGFRValue >= 90) gCategory = 'g1';
+            else if (eGFRValue >= 60) gCategory = 'g2';
+            else if (eGFRValue >= 45) gCategory = 'g3a';
+            else if (eGFRValue >= 30) gCategory = 'g3b';
+            else if (eGFRValue >= 15) gCategory = 'g4';
+            else gCategory = 'g5';
+            finalData.uacrMissing[gCategory]++;
+        } else if (eGFRValue == null) {
+            // Missing eGFR, categorize based on post_uacr
+            let aCategory: keyof typeof finalData.egfrMissing;
+            if (post_uacr < 3) aCategory = 'a1';
+            else if (post_uacr <= 29) aCategory = 'a2';
+            else aCategory = 'a3';
+            finalData.egfrMissing[aCategory]++;
+        } else {
+            // Both values present, categorize fully
+            let aCategory: keyof typeof finalData;
+            let gCategory: keyof typeof finalData.a1;
+
+            if (post_uacr < 3) aCategory = 'a1';
+            else if (post_uacr <= 29) aCategory = 'a2';
+            else aCategory = 'a3';
+
+            if (eGFRValue >= 90) gCategory = 'g1';
+            else if (eGFRValue >= 60) gCategory = 'g2';
+            else if (eGFRValue >= 45) gCategory = 'g3a';
+            else if (eGFRValue >= 30) gCategory = 'g3b';
+            else if (eGFRValue >= 15) gCategory = 'g4';
+            else gCategory = 'g5';
+
+            finalData[aCategory][gCategory]++;
+        }
+    }
+
+    return finalData;
+};
+
+export const v11TableFollowUp = (data: PostFollowUpInterventionData[]) => {
+    let finalData = {
+       a1: { g1: 0, g2: 0, g3a: 0, g3b: 0, g4: 0, g5: 0 },
+       a2: { g1: 0, g2: 0, g3a: 0, g3b: 0, g4: 0, g5: 0 },
+       a3: { g1: 0, g2: 0, g3a: 0, g3b: 0, g4: 0, g5: 0 },
+       egfrMissing: { a1: 0, a2: 0, a3: 0 },
+       uacrMissing: { g1: 0, g2: 0, g3a: 0, g3b: 0, g4: 0, g5: 0 },
+       missingBothLabs: 0,
+    };
+
+    for (const obj of data) {
+        const { followUpUACRValue, followUpEGFRValue } = obj;
+
+        if (followUpUACRValue == null && followUpEGFRValue == null) {
+            finalData.missingBothLabs++;
+        } else if (followUpUACRValue == null) {
+            // Missing UACR, categorize based on followUpEGFR
+            let gCategory: keyof typeof finalData.uacrMissing;
+            if (followUpEGFRValue >= 90) gCategory = 'g1';
+            else if (followUpEGFRValue >= 60) gCategory = 'g2';
+            else if (followUpEGFRValue >= 45) gCategory = 'g3a';
+            else if (followUpEGFRValue >= 30) gCategory = 'g3b';
+            else if (followUpEGFRValue >= 15) gCategory = 'g4';
+            else gCategory = 'g5';
+            finalData.uacrMissing[gCategory]++;
+        } else if (followUpEGFRValue == null) {
+            // Missing eGFR, categorize based on followUpUACR
+            let aCategory: keyof typeof finalData.egfrMissing;
+            if (followUpUACRValue < 3) aCategory = 'a1';
+            else if (followUpUACRValue <= 29) aCategory = 'a2';
+            else aCategory = 'a3';
+            finalData.egfrMissing[aCategory]++;
+        } else {
+            // Both values present, categorize fully
+            let aCategory: keyof typeof finalData;
+            let gCategory: keyof typeof finalData.a1;
+
+            if (followUpUACRValue < 3) aCategory = 'a1';
+            else if (followUpUACRValue <= 29) aCategory = 'a2';
+            else aCategory = 'a3';
+
+            if (followUpEGFRValue >= 90) gCategory = 'g1';
+            else if (followUpEGFRValue >= 60) gCategory = 'g2';
+            else if (followUpEGFRValue >= 45) gCategory = 'g3a';
+            else if (followUpEGFRValue >= 30) gCategory = 'g3b';
+            else if (followUpEGFRValue >= 15) gCategory = 'g4';
+            else gCategory = 'g5';
+
+            finalData[aCategory][gCategory]++;
+        }
+    }
+
+    return finalData;
+};
+
+
+export const v11FollowUpCountsNew = (data: PostFollowUpInterventionData[]) => {
+    let finalData = {
+        visitComplete: 0,
+        visitNotComplete: 0,
+        egfrComplete: 0,
+        egfrNotComplete: 0,
+        uacrComplete: 0,
+        uacrNotComplete: 0,
+        bothTestsComplete: 0,
+        oneTestNotComplete: 0,
+    };
+
+    for (const obj of data) {
+        const {
+            followUpCompleted, 
+            followUpTestOrdered,
+            followUpTestComplete,
+            followUpEGFRValue,
+            followUpUACRValue,
+        } = obj;
+
+        // Normalize null/empty values
+        const egfrValid = followUpEGFRValue !== null && followUpEGFRValue !== undefined;
+        const uacrValid = followUpUACRValue !== null && followUpUACRValue !== undefined;
+
+        // Determine Visit Completion
+        const visitComplete = (
+            followUpCompleted === 'Yes' ||
+            followUpTestOrdered === 'Yes' ||
+            followUpTestComplete === 'Yes' ||
+            egfrValid ||
+            uacrValid
+        );
+
+        if (visitComplete) {
+            finalData.visitComplete++;
+        } else {
+            finalData.visitNotComplete++;
+        }
+
+        // EGFR Counts
+        if (egfrValid) {
+            finalData.egfrComplete++;
+        } else {
+            finalData.egfrNotComplete++;
+        }
+
+        // UACR Counts
+        if (uacrValid) {
+            finalData.uacrComplete++;
+        } else {
+            finalData.uacrNotComplete++;
+        }
+
+        // Both Tests & One Test Logic
+        if (egfrValid && uacrValid) {
+            finalData.bothTestsComplete++;
+        } else if (egfrValid || uacrValid) {
+            finalData.oneTestNotComplete++;
+        }
+    }
+
+    return finalData;
+};
+
+
+
+
+export const v11TableMegan = (
+    data: PostInterventionData[],
+    followUpData: PostFollowUpInterventionData[]
+) => {
+    let finalData = {
+        abnormal: { a1: 0, a2: 0, a3: 0 },
+        normal: { a1: 0, a2: 0, a3: 0 },
+        highAbnormal: { a1: 0, a2: 0, a3: 0 },
+        missingLabs: { normal: 0, abnormal: 0, highAbnormal: 0 }
+    };
+
+    // Create a map of follow-up UACR values by MRN for quick lookup
+    const followUpMap = new Map<string, number | null>();
+    for (const followUp of followUpData) {
+        followUpMap.set(followUp.mrn.toString(), followUp.followUpUACRValue);
+    }
+
+    for (const obj of data) {
+        const { mrn, testResult } = obj;
+        const post_uacr = followUpMap.get(mrn.toString()) ?? null; // Get corresponding followUpUACRValue
+
+        if (post_uacr === null) {
+            // Increment missing lab count based on test result
+            if (testResult === "Normal") {
+                finalData.missingLabs.normal++;
+            } else if (testResult === "Abnormal") {
+                finalData.missingLabs.abnormal++;
+            } else if (testResult === "High Abnormal") {
+                finalData.missingLabs.highAbnormal++;
+            }
+            continue;
+        }
+
+        // Determine UACR category
+        let group: "a1" | "a2" | "a3";
+        if (post_uacr < 3) {
+            group = "a1";
+        } else if (post_uacr >= 3 && post_uacr <= 29) {
+            group = "a2";
+        } else {
+            group = "a3";
+        }
+
+        // Increment the corresponding category
+        if (testResult === "Normal") {
+            finalData.normal[group]++;
+        } else if (testResult === "Abnormal") {
+            finalData.abnormal[group]++;
+        } else if (testResult === "High Abnormal") {
+            finalData.highAbnormal[group]++;
+        }
+    }
+
+    return finalData;
+};
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------------
 // Survey Monkey Analysis 
 // -----------------------------------------------------------------------------------------------------------------------------------------------
 
