@@ -344,4 +344,18 @@ export const ageFx = (data: any[], key: string) => {
   }, {} as Record<string,number>);
 }
 
-// Number of people by health insurance type
+// ======================================================================================================================================
+// Function 7 - Tab3 "Dashboard Functions"
+// ======================================================================================================================================
+
+export const surveyCounts = (data: any[], time: number, surveyDataVariable: string) => {
+  return data.reduce((acc, obj) => {
+    const surveyCompletedData = obj[surveyDataVariable];
+    
+    if (obj.surveyTime === time && surveyCompletedData) {
+      acc += 1
+    }
+
+    return acc
+  }, 0);
+}
