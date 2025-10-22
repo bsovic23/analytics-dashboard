@@ -20,6 +20,15 @@ export interface Registration {
     [key: string]: any,
 }
 
+// Registration Names Data
+
+export interface RegistrationNames {
+    id: string,
+    regNames_email: string,
+    regNames_firstName: string,
+    regNames_lastName: string,
+}
+
 // Informed Consent
 
 export interface InformedConsent {

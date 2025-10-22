@@ -1,78 +1,37 @@
 // SalesForce Cleanup Functions
 
-import {
-    WildApricotdata,
-    SalesForceData,
+import { SalesForceMembership } from '../typeScript/salesForce';
 
-    MatchedPx
-} from '../typeScript/salesForce';
+// ===========================================================
+// Duplicate Identification
+// ===========================================================
 
-/*
+// ---------------------------------
+// All Time Memberships
+// ---------------------------------
 
-export const dupsFunction = (data1: WildApricotdata[], data2: SalesForceData[]) => {
-    let wildApricotIds: { id: string; sfId: string; sfIdRecent: string }[] = [];
-    let salesForceIds: { id: string; contactId: string }[] = [];
+export const sfDups = (data: SalesForceMembership[]) => {
 
-    let matchedPx: MatchedPx = {};
+    let identifierMap: { [key: string]: SalesForceMembership[]} = {};
 
-    for (const obj of data1) {
-        let id = `${obj.firstName}-${obj.lastName}`;
-        let sfId = obj.salesForceId;
-        let sfIdRecent = obj.recentSalesForceId;
+    for (const obj of data) {
+        const { 
+            'Contact ID': id,
+            'First Name': firstName,
+            'Last Name': lastName,
+            'Email': email,
+        } = obj;
 
-        wildApricotIds.push({ id, sfId, sfIdRecent });
-    }
+        const identifier = `${firstName}-${lastName}-${email}`;
 
-    for (const obj of data2) {
-        let id = `${obj.firstName}-${obj.lastName}`;
-        let contactId = obj.contactId;
-
-        salesForceIds.push({ id, contactId });
-    }
-
-    for (const obj of wildApricotIds) {
-        let id = obj.id;
-
-        if (!matchedPx[id]) {
-            matchedPx[id] = {
-                wildApricot: [],
-                salesForce: []
-            }
+        if (!identifierMap[identifier]) {
+            identifierMap[identifier] = [];
         }
 
-        matchedPx[id].wildApricot.push({ sfId: obj.sfId, sfIdRecent: obj.sfIdRecent })
-    };
-
-    for (const obj of salesForceIds) {
-        let id = obj.id;
-
-        if (!matchedPx[id]) {
-            matchedPx[id] = {
-                wildApricot: [],
-                salesForce: []
-            }
-        }
-
-        matchedPx[id].salesForce.push({ contactId: obj.contactId })
+        identifierMap[identifier].push(obj);
     }
 
-    let filteredMatchedPx: MatchedPx = {};
-    
-    for (const id in matchedPx) {
-        if (matchedPx[id].wildApricot.length !== 1 || matchedPx[id].salesForce.length !== 1) {
-            filteredMatchedPx[id] = matchedPx[id];
-        }
-    }
+    // Return only the duplicates
 
-    const sortedMatchedPx: MatchedPx = {};
-    Object.keys(filteredMatchedPx)
-        .sort((a, b) => a.localeCompare(b))
-        .forEach(key => {
-            sortedMatchedPx[key] = filteredMatchedPx[key];
-        });
 
-    return sortedMatchedPx;
-};
-
-*/
-
+}

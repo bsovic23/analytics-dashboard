@@ -11,10 +11,6 @@ Analysis
 * Retention - At what point is a survey considered "late" can run calculations based on 
 * Create functions to identify data that is error / needs to be chekced / can be fixed in other surveys and updated
 
-Sandy 11/22 email
-* Fix date format of DOB, and registration date to MM/DD/YYYY
-* Create an age formula
-
 -----------------------------
 2. Data Merge, Clean and/or Rules
 -----------------------------
@@ -45,15 +41,61 @@ Sandy 11/22 email
 5. Updates to "Tab 1" combodataset
     [] Add KDQOL / EQ5D5L Scores
 
+-----------------------------
+3. Analytics
+-----------------------------
+
+Sandy Question Include:
+- [] Send top 50 list (non-lab value variables) of all 'changed variables' to review for rules?
+
+Curent Analytics Finalized Inlcudes:
+    Table Data
+    * Race
+    * Ethnicity
+    * Sex
+    * Age
+    * Insurance
+    * CKD Stage
+    * Dialysis 
+    * CKD Cause Data
+
+    Survey Counts
+    * Registration Complete
+    * ICF Complete
+    * Baseline
+    * 6 Month Survey
+
+    IGAN
+    * IGAN 
+
+New Analytics Includes:
+* Retention Analytics: % 6, 12 month complete on time (ex: 6 month time period for survey has passed and user has completed / not completed)
+* Bivariate Analysis: If you are interested in re-occuring analytics for 2 variables (ie gender * ckd cause, # registration * ckd cause, # core surveys * dialysis) or if with the survey 
+* Core Survey blanks / Other highest answers questions so youre able to analyze which questions are missing a common choice
+
+New Analytics Process Includes:
+* If variables are added that neither of us know about, the process catches them and easy way for me to confirm and auto add to the combo code process
+* Easier combo process down to 10 min: Spreadsheet added
+
+Future New Analytics Process:
+* Map + Charts/stats:
+    - detailed information -> cause of ckd
+    - demographics (race/ethnicity, gender)
+
+    ***** This process I really dont want pushed to production until we figure out the EMR data inclusion into the combo process
+
+Things to think about Regarding EMR data:
+
+1. This is a lot of data im assuming, do you have any idea if the EMR data will only be associated with X variables or surveys
+    * I would rather have it be a seperate combo like EMR data + demographics only (not follow up surveys?)
+    * Note: This would not mean that we are never able to do full analytics, but the process of me giving you a full dataset may be slow/errors with the pure magnitude of data
+
+2. Regardless of the data choices above if its not available via your downloads:
+    * This may be an issue because if this is locked within the amazon workspace i am not sure how downloads will work in terms of me doing analysis and then giving it to you
 
 -----------------------------
-3. Extra
+4. Combo Versions To Build
 -----------------------------
-
-- Data Rule Chance Guide that I made (is format correct / columns)
-
-- Send top 50 list (non-lab value variables) of all 'changed variables' to review for rules
-    * Meeting with Sandy (include the counts of how often the 'change' is happening) and include rule change logic
 
 Current Combo Versions:
 1. Raw No Rule, Combo Data
@@ -63,7 +105,5 @@ Current Combo Versions:
 
 4. CREATE also a dataset that can be used for the interactive dashboard built
 
-* Map + Charts/stats will be available next week if you need another up to date dataset by like Friday
-    - detailed information -> cause of ckd
-    - demographics (race/ethnicity, gender)
+
 

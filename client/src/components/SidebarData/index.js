@@ -85,6 +85,13 @@ export const SidebarData = [
         description: "Practice Cards View Here"
     },
     {
+        title: "Standard Analysis",
+        icon: <AnalyticsIcon />,
+        link: "/StandardAnalysis",
+        image: imageTwo,
+        description: "General import and analytics page"
+    },
+    {
         title: "Information", 
         icon: <InfoIcon />,
         link: "/",

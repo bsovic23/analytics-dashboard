@@ -16,34 +16,31 @@ import {
 // =======================================================================================================================================
 
 // ------ Wild Apricot Duplicates -------
-
+  
 export const wildApricotDupsFx = (data: WildApricotData[]): WildApricotDups => {
-    let wildApricotDataClean: WildApricotDups = {};
-
+    const counts: { [key: string]: { dupCount: number; ids: number[] } } = {};
+  
     for (const obj of data) {
-        const { 'User ID': userId, 'First name': firstName, 'Last name': lastName, 'Email': email } = obj;
-        let uniqueId = `${firstName}-${lastName}-${email}`;
-
-        if (!wildApricotDataClean[uniqueId]) {
-            wildApricotDataClean[uniqueId] = {
-                dupCount: 0,
-                ids: [],
-            };
-        }
-
-        wildApricotDataClean[uniqueId].dupCount++;
-        wildApricotDataClean[uniqueId].ids.push(userId);
+      const { 'User ID': userId, 'First name': firstName, 'Last name': lastName, 'Email': email } = obj;
+      const uniqueId = `${firstName}-${lastName}-${email}`;
+  
+      if (!counts[uniqueId]) {
+        counts[uniqueId] = { dupCount: 1, ids: [userId] };
+      } else {
+        counts[uniqueId].dupCount++;
+        counts[uniqueId].ids.push(userId);
+      }
     }
-
-    let dupReviews: WildApricotDups = {};
-    for (const key in wildApricotDataClean) {
-        if (wildApricotDataClean[key].dupCount > 1) {
-            dupReviews[key] = wildApricotDataClean[key];
-        }
+  
+    const dupReviews: WildApricotDups = {};
+    for (const key in counts) {
+      if (counts[key].dupCount > 1) {
+        dupReviews[key] = counts[key];
+      }
     }
-
+  
     return dupReviews;
-};
+  };
 
 // ------ Wild Apricot Lapsed Members Renewal -------
 
@@ -61,12 +58,10 @@ export const wildApricotMemberLapseFx = (
             "Last name": lastName,
             "Email": email,
             "Phone": phone,
-            "Membership enabled": membershipEnabled,
             "Membership level": membershipLevel,
             "Membership status": membershipStatus,
             "Member since": memberSince,
             "Renewal due": renewalDue,
-            "Renewal date since last changed": renewalDateLastChange,
         } = obj;
 
         const renewalDate = new Date(renewalDue);
@@ -84,12 +79,10 @@ export const wildApricotMemberLapseFx = (
                 lastName: lastName,
                 email: email,
                 phone: phone,
-                membershipEnabled: membershipEnabled,
                 membershipLevel: membershipLevel,
                 membershipStatus: membershipStatus,
                 memberSince: memberSince,
                 renewalDue: renewalDue,
-                renewalDateLastChange: renewalDateLastChange,
             });
         }
     }
@@ -336,6 +329,12 @@ export const newFunctions = (data: WildApricotData[]) => {
             October: 0,
             November: 0,
             December: 0
+        },
+        activeMemberByMonth2025: {
+            January: 0,
+            February: 0,
+            March: 0,
+            April: 0,
         }
     };
 
@@ -363,6 +362,12 @@ export const newFunctions = (data: WildApricotData[]) => {
             if (year === 2024) {
                 const monthName = months[month]; // Get month name from the array
                 finalData.activityByMonth2024[monthName]++;
+            }
+            if (year === 2025 && month <= 3) {
+                if (year === 2025 && month <= 2) { 
+                    const monthName = months[month]; 
+                    finalData.activeMemberByMonth2025[monthName]++;
+                }
             }
         }
     }
@@ -413,8 +418,8 @@ export const activeMemberByMonth = (data: WildApricotData[]) => {
     let finalData: { [key: string]: number } = {};
 
     const startPeriod = new Date("01/01/2023");
-    const endPeriod = new Date("11/30/2024");
-    const today = new Date("12/10/2024");
+    const endPeriod = new Date("3/31/2025");
+    const today = new Date("3/31/2025");
 
     // Generate an array of months between startPeriod and endPeriod
     const getMonthsArray = (start: Date, end: Date): string[] => {
@@ -631,6 +636,13 @@ export const addOnAnalysisFx = (data: WildApricotData[]) => {
 };
 
 
+// New Retention Function
+
+export const retentionFx = (data: WildApricotData[]) => {
+    return 'NEED TO UPDATE RETENTION FUNCTION';
+};
+
+
 // =======================================================================================================================================
 // Wild Apricot Analysis
 // =======================================================================================================================================
@@ -672,3 +684,255 @@ export const membershipSurveyFx = (surveyData: SurveyData[]) => {
 
     return finalData;
 }
+
+
+// =======================================================================================================================================
+// NEW JORDAN FISCAL REPORT VARIABLES
+// =======================================================================================================================================
+
+export const jordan_memberMonth = (data: WildApricotData[]) => {
+  const count2024: { [month: string]: number } = {};
+  const count2025: { [month: string]: number } = {};
+
+  for (const obj of data) {
+    const dateStr = obj["Member since"];
+    if (!dateStr) continue;
+
+    const date = new Date(dateStr);
+    const year = date.getFullYear();
+    const month = date.toLocaleString('default', { month: 'short' });
+
+    if (year === 2024) {
+      count2024[month] = (count2024[month] || 0) + 1;
+    } else if (year === 2025) {
+      count2025[month] = (count2025[month] || 0) + 1;
+    }
+  }
+
+  return {
+    "2024": count2024,
+    "2025": count2025
+  };
+};
+
+export const jordan_stateMonth = (data: WildApricotData[]) => {
+  const result: {
+    [year: string]: {
+      [quarter: string]: {
+        count: number;
+        topStates: { [state: string]: number };
+      };
+    };
+  } = {
+    "2024": {},
+    "2025": {},
+  };
+
+  const getQuarterLabel = (monthIndex: number): string => {
+    if (monthIndex <= 2) return "Q1 (Jan–Mar)";
+    if (monthIndex <= 5) return "Q2 (Apr–Jun)";
+    if (monthIndex <= 8) return "Q3 (Jul–Sep)";
+    return "Q4 (Oct–Dec)";
+  };
+
+  for (const obj of data) {
+    const dateStr = obj["Member since"];
+    const country = obj["Country"];
+    const state = obj["State/Province"];
+
+    if (!dateStr || country !== "United States" || !state) continue;
+
+    const date = new Date(dateStr);
+    const year = date.getFullYear();
+    if (year !== 2024 && year !== 2025) continue;
+
+    const monthIndex = date.getMonth(); // 0 = Jan
+    const quarter = getQuarterLabel(monthIndex);
+
+    if (!result[year][quarter]) {
+      result[year][quarter] = { count: 0, topStates: {} };
+    }
+
+    result[year][quarter].count += 1;
+    result[year][quarter].topStates[state] =
+      (result[year][quarter].topStates[state] || 0) + 1;
+  }
+
+  // Reduce to top 3 states per quarter
+  for (const year of ["2024", "2025"]) {
+    for (const quarter in result[year]) {
+      const topStates = result[year][quarter].topStates;
+
+      const topThree = Object.entries(topStates)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 7);
+
+      result[year][quarter].topStates = Object.fromEntries(topThree);
+    }
+  }
+
+  return result;
+};
+
+export const jordan_professionMonth = (data: WildApricotData[]) => {
+  const result: {
+    [year: string]: {
+      [quarter: string]: {
+        count: number;
+        topProfessions: { [profession: string]: number };
+      };
+    };
+  } = {
+    "2024": {},
+    "2025": {},
+  };
+
+  const getQuarterLabel = (monthIndex: number): string => {
+    if (monthIndex <= 2) return "Q1 (Jan–Mar)";
+    if (monthIndex <= 5) return "Q2 (Apr–Jun)";
+    if (monthIndex <= 8) return "Q3 (Jul–Sep)";
+    return "Q4 (Oct–Dec)";
+  };
+
+  for (const obj of data) {
+    const dateStr = obj["Member since"];
+    const profession = obj["Membership level"];
+
+    if (!dateStr || !profession) continue;
+
+    const date = new Date(dateStr);
+    const year = date.getFullYear();
+    if (year !== 2024 && year !== 2025) continue;
+
+    const monthIndex = date.getMonth(); // 0 = Jan
+    const quarter = getQuarterLabel(monthIndex);
+
+    if (!result[year][quarter]) {
+      result[year][quarter] = { count: 0, topProfessions: {} };
+    }
+
+    result[year][quarter].count += 1;
+    result[year][quarter].topProfessions[profession] =
+      (result[year][quarter].topProfessions[profession] || 0) + 1;
+  }
+
+  // Reduce to top 5 professions per quarter
+  for (const year of ["2024", "2025"]) {
+    for (const quarter in result[year]) {
+      const topProf = result[year][quarter].topProfessions;
+
+      const topFive = Object.entries(topProf)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 5);
+
+      result[year][quarter].topProfessions = Object.fromEntries(topFive);
+    }
+  }
+
+  return result;
+};
+
+interface MinimalData {
+  "Invoice date": string;
+  "Organization": string;
+}
+
+export const jordan_organizationCount = (data: MinimalData[]) => {
+  const count2024: { [organization: string]: number } = {};
+  const count2025: { [organization: string]: number } = {};
+
+  for (const obj of data) {
+    const dateStr = obj["Invoice date"];
+    const org = obj["Organization"];
+
+    if (!dateStr || !org) continue;
+
+    const date = new Date(dateStr);
+    const year = date.getFullYear();
+
+    if (year === 2024) {
+      count2024[org] = (count2024[org] || 0) + 1;
+    } else if (year === 2025) {
+      count2025[org] = (count2025[org] || 0) + 1;
+    }
+  }
+
+  const getTop15 = (counts: { [org: string]: number }) => {
+    return Object.entries(counts)
+      .sort((a, b) => b[1] - a[1]) // sort descending by count
+      .slice(0, 15)                // take top 15
+      .reduce((acc, [org, count]) => {
+        acc[org] = count;
+        return acc;
+      }, {} as { [org: string]: number });
+  };
+
+  return {
+    top15_2024: getTop15(count2024),
+    top15_2025: getTop15(count2025),
+  };
+};
+
+export const jordan_memberOrigin = (data: any[]) => {
+  const counts: { [year: number]: { [origin: string]: number } } = {
+    2024: {},
+    2025: {},
+  };
+
+  for (const obj of data) {
+    const dateStr = obj["Invoice date"];
+    const origin = obj["Origin"];
+    if (!dateStr || !origin) continue;
+
+    const year = new Date(dateStr).getFullYear();
+    if (year !== 2024 && year !== 2025) continue;
+
+    if (!counts[year][origin]) {
+      counts[year][origin] = 0;
+    }
+    counts[year][origin]++;
+  }
+
+  return counts;
+};
+
+// Re-paid while lapsed Count
+
+export const jordan_lapsedOrigin = (data: any[]) => {
+  const counts: { [year: number]: number } = {
+    2024: 0,
+    2025: 0,
+  };
+
+  const targetPhrase =
+    "Renewal invoice was paid while the member was lapsed. Renewal date was updated according to the membership level's renewal policy, and the membership status set to Active.";
+
+  for (const obj of data) {
+    const dateStr = obj["Invoice date"];
+    const origin = obj["Origin"];
+    const notes = obj["Internal notes"];
+
+    if (!dateStr || !origin || origin !== "Member renewal" || !notes) continue;
+
+    const year = new Date(dateStr).getFullYear();
+    if (year !== 2024 && year !== 2025) continue;
+
+    if (notes.startsWith(targetPhrase)) {
+      counts[year]++;
+    }
+  }
+
+  return counts;
+};
+
+
+// Subspecialty Count
+
+
+
+
+
+
+// =======================================================================================================================================
+// JORDAN FINAL STATS
+// =======================================================================================================================================

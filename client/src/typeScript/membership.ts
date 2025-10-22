@@ -13,6 +13,8 @@ export interface WildApricotData {
     'State/Province': string,
     'Country': string,
     'Date of Birth': string,
+    'Organization': string,
+    'Do you authorize sending relevant text messages?': string,
     'How did you learn about NKF Professional Membership?': string,
     "Add-On E-Subscription to NKF Journals": number,
     "Add-On E-Subscription to NKF Journals 2 Year": number,
@@ -29,13 +31,10 @@ export interface WildApricotData {
     "Add-On International Society of Nutrition and Metabolism (ISRNM) Membership - Dietitian": number,
     "Add-On International Society of Nutrition and Metabolism (ISRNM) Membership - Dietitian 2 Year": number,
     'Last login': string,
-    'Membership enabled': string,
     'Membership level': string,
     'Membership status': string,
     'Member since': string,
     'Renewal due': string,
-    'Renewal date since last changed': string,
-    'Level last changed': string,  
 }
 
 export interface SurveyData {
@@ -72,10 +71,10 @@ export interface WildApricotPrevContacts {
 // Wild Apricot Duplicates Output
 
 export interface WildApricotDups {
-    [uniqueId: string]: {
-        dupCount: number,
-        ids: number[],
-    }
+    [key: string]: {
+      dupCount: number;
+      ids: number[];
+    };
 }
 
 // Wild Apricot 30 day Membership Lapse Output
@@ -86,12 +85,10 @@ export interface WildApricotMembershipLapsed {
     lastName: string,
     email: string,
     phone: string,
-    membershipEnabled: string,
     membershipLevel: string,
     membershipStatus: string,
     memberSince: string,
     renewalDue: string,
-    renewalDateLastChange: string,
 }
 
 

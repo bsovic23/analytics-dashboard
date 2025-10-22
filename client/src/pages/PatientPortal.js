@@ -26,6 +26,9 @@ import {
     // Stat Functions
     countByCategory,
     ageFx,
+
+    surveyCounts,
+    surveyCountsBySite,
 } from '../functions/patientPortalFx';
 
 // Data Imports
@@ -99,16 +102,48 @@ const PatientPortal = () => {
     const [raceData, setRaceData] = useState(countByCategory(comboData, 'c_race'));
     const [ethnicityData, setEthnicityData] = useState(countByCategory(comboData, 'c_ethnicity'));
     const [sexData, setSexData] = useState(countByCategory(comboData, 'reg_gender'));
+    const [genderData, setGenderData] = useState(countByCategory(comboData, 'c_gender'));
     const [ageData, setAgeData] = useState(ageFx(comboData, 'reg_ageRegistration'));
     const [insuranceData, setInsuranceData] = useState(countByCategory(comboData, 'c_healthInsuranceType'));
     const [ckdStageData, setCkdStageData] = useState(countByCategory(comboData, 'c_ckdCurrentStage'));
     const [dialysisData, setDialysisData] = useState(countByCategory(comboData, 'c_dialysis'));
+    const [transplantData, setTransplantData] = useState(countByCategory(comboData, 'c_transplant'));
+    const [organsData, setOrgansData] = useState(countByCategory(comboData, 'c_organsWhich'));
+    const [donorData, setDonorData] = useState(countByCategory(comboData, 'c_donation'));
+    const [donorStatusData, setDonorStatusData] = useState(countByCategory(comboData, 'c_statusTransplant'));
+    const [healthProblemsData, setHealthProblemsData] = useState(countByCategory(comboData, 'c_otherHealthProblemsWhat'));
+    const [geneticData, setGeneticData] = useState(countByCategory(comboData, 'c_geneticTesting'));
+    const [familyHistoryData, setFamilyHistoryData] = useState(countByCategory(comboData, 'c_familyKidneyDisease'));
     const [ckdCauseData, setCkdCauseData] = useState(countByCategory(comboData, 'c_knowCauseSelect'));
+
+
+    const [registerCount, setRegisterCount] = useState(surveyCounts(comboData, 0, 'reg_gender'));
+    const [icfCount, setIcfCount] = useState(surveyCounts(comboData, 0, 'icf_dateSigned'));
+    const [baselineCore, setBaselineCore] = useState(surveyCounts(comboData, 0, 'c_language'));
+    const [baselineEq5d5l, setBaselineEd5d5l] = useState(surveyCounts(comboData, 0, 'eq_mobility'));
+    const [baselineKdqol, setBaselineKdqol] = useState(surveyCounts(comboData, 0, 'kdqol_health'));
+
+    const [registerCountG, setRegisterCountG] = useState(surveyCountsBySite(comboData, 0, 'reg_gender', 'reg_healthSystem'));
+    const [icfCountG, setIcfCountG] = useState(surveyCountsBySite(comboData, 0, 'icf_dateSigned', 'reg_healthSystem'));
+    const [baselineCoreG, setBaselineCoreG] = useState(surveyCountsBySite(comboData, 0, 'c_language', 'reg_healthSystem'));
+    const [baselineEq5d5lG, setBaselineEd5d5lG] = useState(surveyCountsBySite(comboData, 0, 'eq_mobility', 'reg_healthSystem'));
+    const [baselineKdqolG, setBaselineKdqolG] = useState(surveyCountsBySite(comboData, 0, 'kdqol_health', 'reg_healthSystem'));
+
+    const [sixCore, setBaselineCore6] = useState(surveyCounts(comboData, 1, 'c_language'));
+    const [sixEq5d5l, setBaselineEd5d5l6] = useState(surveyCounts(comboData, 1, 'eq_mobility'));
+    const [sixKdqol, setBaselineKdqol6] = useState(surveyCounts(comboData, 1, 'kdqol_health'));
 
     /*
 
-    
+
+
+    const [registerCount, setRegisterCount] = useState(surveyCounts(comboData, 0, variable));
+    const [registerCount, setRegisterCount] = useState(surveyCounts(comboData, 0, variable));
+    const [registerCount, setRegisterCount] = useState(surveyCounts(comboData, 0, variable));
+    const [registerCount, setRegisterCount] = useState(surveyCounts(comboData, 0, variable));
+    const [registerCount, setRegisterCount] = useState(surveyCounts(comboData, 0, variable));
     */
+    
 
     // Analysis Buttons
     const analysisButtons = [
@@ -119,23 +154,50 @@ const PatientPortal = () => {
         { id: 5, "name": "Core Survey Top variable differences", "data": variableRules },
         { id: 6, "name": "Cleaned Data Combo", "data": comboData },
         // Stat Functions
-        { id: 7, "name": "Race Data", "data": raceData },
-        { id: 8, "name": "Ethnicity Data", "data": ethnicityData },
-        { id: 9, "name": "Sex Data", "data": sexData },
-        { id: 10, "name": "Age Data", "data": ageData },
+        { id: 7, "name": "Race", "data": raceData },
+        { id: 8, "name": "Ethnicity", "data": ethnicityData },
+        { id: 9, "name": "Sex Assigned At Birth", "data": sexData },
+        { id: 100, "name": "Gender Identity", "data": genderData },
+        { id: 10, "name": "Age", "data": ageData },
+        // survey counc
+        { id: 11, "name": "Count: registration", "data": registerCount },
+        { id: 12, "name": "Count: icf", "data": icfCount },
+        { id: 13, "name": "Count: core survey", "data": baselineCore },
+        { id: 14, "name": "Count: eq5d5l", "data": baselineEq5d5l },
+        { id: 15, "name": "Count: kdqol", "data": baselineKdqol },
+
+        // survey counc
+        { id: 111, "name": "G Count: registration", "data": registerCountG },
+        { id: 121, "name": " G Count: icf", "data": icfCountG },
+        { id: 131, "name": "G Count: core survey", "data": baselineCoreG },
+        { id: 141, "name": " GCount: eq5d5l", "data": baselineEq5d5lG },
+        { id: 151, "name": "  GCount: kdqol", "data": baselineKdqolG },
+
+
+        { id: 16, "name": "Count: 6 core survey", "data": sixCore },
+        { id: 17, "name": "Count: 6 eq5d5l", "data": sixEq5d5l },
+        { id: 18, "name": "Count: 6 kdqol", "data": sixKdqol },
     ];   
 
     return(
         <section class='page' id='patientPortal'>
         <GeneralTable dataObjects={{
-            "Race Data": raceData,
-            "Ethnicity Data": ethnicityData,
-            "Sex Data": sexData,
-            "Age Data": ageData,
-            "Insurance Data": insuranceData,
-            "CKD Stage Data": ckdStageData,
-            "Dialysis Data": dialysisData,
-            "CKD Cause Data": ckdCauseData,
+            "Race": raceData,
+            "Ethnicity": ethnicityData,
+            "Sex Assigned At Birth": sexData,
+            "Gender Identity": genderData,
+            "Age": ageData,
+            "Insurance": insuranceData,
+            "CKD Stage": ckdStageData,
+            "Dialysis": dialysisData,
+            "Transplant": transplantData,
+            "Organs": organsData,
+            "Type of Organ Donation": donorData,
+            "Functional Status of Transplant": donorStatusData,
+            "Comorbid Conditions": healthProblemsData,
+            "Genetic Testing": geneticData,
+            "Family History": familyHistoryData,
+            "CKD Cause": ckdCauseData,
         }} />
         <Page pageTitle={title} buttons={analysisButtons} />
         <GenerateExcelFileGeneral generalData={comboData} />

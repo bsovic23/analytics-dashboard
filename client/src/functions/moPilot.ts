@@ -14,7 +14,6 @@ import {
     MoSiteDemographics, // Zip Code Analysis Count
 } from "../typeScript/moPilot";
 
-
 // ------------- Clean Up -----------//
 
 export const moPilotDataCleanUp = (initial: MoPilotInitial[], followUp: MoPilotFollowUp[]): MoPilotAllData => {
@@ -102,13 +101,11 @@ export const moPilotDataCleanUp = (initial: MoPilotInitial[], followUp: MoPilotF
     return finalData;
 };
 
-
 // ------------- Trends Among Desc Category ----------- //
 
 export const trendsFx = () => {
 
 };
-
 
 // ------------- Final Data Analysis Counts ----------- //
 
@@ -159,7 +156,7 @@ export const finalDataAnalysisFx = (data: MoPilotAllData) => {
         uacrIndividualsCount: 0,
         uacrTotal: 0,
     };
-
+    
     const incrementCount = (survey: Record<string, Record<string, number>>, key: string, value: string) => {
         if (!survey[key]) {
             survey[key] = {};
@@ -271,8 +268,6 @@ export const finalDataAnalysisFx = (data: MoPilotAllData) => {
     return finalData;
 };
 
-
-
 // ------------- Counts ----------- //
 
 export const surveyCounts = (initial: MoPilotInitial[], followUp: MoPilotFollowUp[]) => {
@@ -339,8 +334,6 @@ export const surveyCounts = (initial: MoPilotInitial[], followUp: MoPilotFollowU
     return { counts, missingInInitial };
 };
 
-
-
 // ------------- Counts ----------- //
 
 export const missingFollowUp = (
@@ -375,7 +368,6 @@ export const missingFollowUp = (
 
     return missing;
 };
-
 
 export const moSiteDemographicsFx = (initialData: MoPilotInitial[]) => {
     let siteDemData: MoSiteDemographics = {};
@@ -424,7 +416,7 @@ export const moSiteDemographicsFx = (initialData: MoPilotInitial[]) => {
         // Insurance
         if (insurance in siteDemData[location].insurance) {
             siteDemData[location].insurance[insurance] += 1;
-        } else {
+        } else {    
             siteDemData[location].insurance[insurance] = 1;
         }
 
@@ -457,7 +449,6 @@ export const moSiteDemographicsFx = (initialData: MoPilotInitial[]) => {
     return siteDemData;
 };
 
-
 // ------------- Abnormal vs Normal Results By Site ----------- //
 
 export const moSiteLabs = (data: MoPilotFollowUp[]) => {
@@ -478,4 +469,67 @@ export const moSiteLabs = (data: MoPilotFollowUp[]) => {
     }
 
     return finalData;
+};
+
+// ------------- Counts of Unique Individuals By Site -------------------- //
+
+export const uniqueIndividualSiteCountFx = (data: MoPilotInitial[]) => {
+
+    const siteCount = {
+        alps: [] as string[],
+        sams: [] as string[],
+        semo: [] as string[],
+    };
+
+    for (const obj of data) {
+        const { identifier, location } = obj;
+
+        if (location === 'Alps (Anderson, 64831)' || location === 'Alps (Nixa, 65714)' || location === 'Alps (Springfield, 65803)') {
+            if (!siteCount.alps.includes(identifier)) {
+                siteCount.alps.push(identifier);
+            }
+        }
+
+        if (location === 'Sam’s Health Mart #1 (Moberly, 65270)' || location === 'Sam’s Health Mart #2 (Moberly, 65270)') {
+            if (!siteCount.sams.includes(identifier)) {
+                siteCount.sams.push(identifier);
+            }
+        }
+
+        if (location === 'SEMO Rx: L&S (Charleston, 63801)') {
+            if (!siteCount.semo.includes(identifier)) {
+                siteCount.semo.push(identifier);
+            }
+        }
+    }
+
+    return {
+        alpsCount: siteCount.alps.length,
+        samsCount: siteCount.sams.length,
+        semoCount: siteCount.semo.length,
+    };
+}
+
+
+// ------------- Counts of Unique Individuals By Site -------------------- //
+
+export const uniqueIndividualSiteCount2Fx = (data: MoPilotInitial[]) => {
+    const siteCount: { [location: string]: Set<string> } = {};
+
+    for (const obj of data) {
+        const { identifier, location } = obj;
+
+        if (!siteCount[location]) {
+            siteCount[location] = new Set();
+        }
+
+        siteCount[location].add(identifier);
+    }
+
+    const siteCountSummary: { [location: string]: number } = {};
+    for (const location in siteCount) {
+        siteCountSummary[location] = siteCount[location].size;
+    }
+
+    return siteCountSummary;
 };

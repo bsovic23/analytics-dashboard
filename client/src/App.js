@@ -17,6 +17,7 @@ import MoPilot from './pages/moPilot';
 import ProjectEcho from './pages/ProjectEcho';
 import BsovAnalytics from './pages/BsovAnalytics';
 import PatientPortal from './pages/PatientPortal';
+import StandardAnalysis from './pages/StandardAnalysis';
 
 // Bsov Analytics
 import DataBot from './pages/BsovAnalyticsPages/DataBot';
@@ -43,6 +44,7 @@ const routes = [
   {path: "/ProjectEcho", element: <ProjectEcho />},
   {path: "/BsovAnalytics", element: <BsovAnalytics />},
   {path: "/PatientPortal", element: <PatientPortal />},
+  {path: "/StandardAnalysis", element: <StandardAnalysis />},
   // Bsov Analytics
   {path: "/DataBot", element: <DataBot />},
   {path: "/NkfAnalyticsPage", element: <NkfAnalyticsPage />},

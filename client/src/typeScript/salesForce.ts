@@ -2,29 +2,13 @@
 // Data Imports 
 // ---------------------
 
-export interface WildApricotdata {
-    userId: number;
-    firstName: string;
-    lastName: string;
-    email: string;
-    category: string;
-    salesForceId: string;
-    recentSalesForceId: string;
-}
-
-export interface SalesForceData { 
-    contactId: string;
-    firstName: string;
-    lastName: string;
-    email: string;
-    memberType: string;
-}
-
-export type MatchedPx = {
-    [key: string]: MatchedData;
-};
-
-export interface MatchedData {
-    wildApricot: { sfId: string; sfIdRecent: string }[];
-    salesForce: { contactId: string }[];
+export interface SalesForceMembership { 
+    'Contact ID': string,
+    'Membership Type': string,
+    'First Name': string,
+    'Last Name': string,
+    'Mailing City': string,
+    'Mailing State/Province': string,
+    'Mailing Zip/Postal Code': string,
+    'Email': string,
 }

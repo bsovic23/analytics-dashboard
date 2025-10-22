@@ -69,7 +69,7 @@ export const registrationFxUpdate = (data: Registration[]): Registration[] => {
             ...obj,
             reg_ageRegistration: ageRegistration,
             reg_ageCurrent: ageCurrent,
-            reg_FormComplete: obj.gender && obj.dob && obj.registrationDate && obj.language && obj.country && obj.zipcode ? true : false,
+            reg_FormComplete: obj.gender && obj.dob && obj.zipcode && obj.language && obj.country && obj.zipcode ? true : false, // If all have answers then complete
             reg_FY,
         };
     });
@@ -82,7 +82,7 @@ export const informedConsentFxUpdate = (data: InformedConsent[]): InformedConsen
 
         return {
             ...obj,
-            icf_Formcomplete: obj.icf_dateSigned && obj.icf_option1 && obj.icf_option2 && obj.icf_option3 ? true : false,
+            icf_Formcomplete: obj.icf_dateSigned && obj.icf_option1 && obj.icf_option2 && obj.icf_option3 ? true : false, // If ICF signed and all 3 options completed
         };
     });
 
@@ -94,7 +94,7 @@ export const coreSurveyFxUpdate = (data: CoreSurvey[]): CoreSurvey[] => {
 
         return {
             ...obj,
-            c_Formcomplete: obj.c_submittedDate ? true : false,
+            c_Formcomplete: obj.c_submittedDate ? true : false, // If there is a submitted date then survey completed
         };
     });
 
@@ -231,7 +231,7 @@ export const patientPortalComboNew = (
     };
   
     // Group and sort datasets by their respective dates
-    const coreGrouped = groupAndSortByDate(coreSurvey, "c_row178"); // Education, employment statys will be core 
+    const coreGrouped = groupAndSortByDate(coreSurvey, "c_row178");
     const eq5d5lGrouped = groupAndSortByDate(eq5d5l, "eq_submittedDate");
     const kdqolGrouped = groupAndSortByDate(kdqol, "kdqol_submittedDate");
   
@@ -281,8 +281,8 @@ export const patientPortalComboNew = (
       }
     });
   
-    return combinedData;
-  };
+  return combinedData;
+};
 
 // ======================================================================================================================================
 // Function 5 - Combine Core Surveys into one based on rules, export core survey questions that SHOULD change into repeating survey
@@ -301,19 +301,22 @@ export const patientPortalComboNew = (
 export const countByCategory = (data: any[], key: string) => {
   return data.reduce((acc, obj) => {
     const category = obj[key];
-    
+
     if (obj.surveyTime === 0 && category && category.trim() !== "") {
       // Split the category string by commas and trim each item
-      const categories = category.split(',').map((item: string) => item.trim());
-      
+      const categories = category.split(",").map((item: string) => item.trim());
+
       // Increment count for each individual category value
       categories.forEach((cat: string) => {
         if (cat) {
           acc[cat] = (acc[cat] || 0) + 1;
         }
       });
+
+      // Only increment totalCount once per object, no matter how many categories it has
+      acc.totalCount = (acc.totalCount || 0) + 1;
     }
-    
+
     return acc;
   }, {} as Record<string, number>);
 };
@@ -353,6 +356,20 @@ export const surveyCounts = (data: any[], time: number, surveyDataVariable: stri
     const surveyCompletedData = obj[surveyDataVariable];
     
     if (obj.surveyTime === time && surveyCompletedData) {
+      acc += 1
+    }
+
+    return acc
+  }, 0);
+}
+
+
+export const surveyCountsBySite = (data: any[], time: number, surveyDataVariable: string, siteVariable: string) => {
+  return data.reduce((acc, obj) => {
+    const surveyCompletedData = obj[surveyDataVariable];
+    const siteHealthSystem = obj[siteVariable]
+    
+    if (obj.surveyTime === time && surveyCompletedData && siteHealthSystem === 'geisinger') {
       acc += 1
     }
 
