@@ -56,7 +56,7 @@ export const Membership = () => {
 
     // Variables
     const [dups, setDups] = useState((wildApricotData !== 'No data found') ? (wildApricotDupsFx(wildApricotData)) : 'No Wild Apricot Data');
-    const month = 8;
+    const month = 10;
     const year = 2025;
     const fy = ['FY21', 'FY22', 'FY23', 'FY24', 'FY25'];
     const [lapsedData, setLapsedData] = useState((wildApricotData !== 'No data found') ? wildApricotMemberLapseFx(wildApricotData, month, year) : 'No Wild Apricot Data');

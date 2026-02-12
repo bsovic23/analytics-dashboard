@@ -376,3 +376,34 @@ export const surveyCountsBySite = (data: any[], time: number, surveyDataVariable
     return acc
   }, 0);
 }
+
+
+
+// ======================================================================================================================================
+// Delete Bots
+// ======================================================================================================================================
+
+export const removeBotsFx = (data: any[], data2: any[]) => {
+  // Create a lookup map from data2 for quick access by id
+  const verifiedMap = new Map<string | number, boolean | undefined>(
+    data2.map((d) => {
+      const val = d.verified ?? d.verfied; // handle both spellings
+      if (typeof val === "string") {
+        const lowerVal = val.trim().toLowerCase();
+        if (lowerVal === "true") return [d.id, true];
+        if (lowerVal === "false") return [d.id, false];
+      }
+      return [d.id, val];
+    })
+  );
+
+  // Map over the main dataset, attach verified value, and filter
+  const cleanedData = data
+    .map((record) => ({
+      ...record,
+      verified: verifiedMap.get(record.id),
+    }))
+    .filter((record) => record.verified !== false); // keep blank (undefined) or true
+
+  return cleanedData;
+};

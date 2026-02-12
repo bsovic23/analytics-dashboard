@@ -20,15 +20,6 @@ export interface Registration {
     [key: string]: any,
 }
 
-// Registration Names Data
-
-export interface RegistrationNames {
-    id: string,
-    regNames_email: string,
-    regNames_firstName: string,
-    regNames_lastName: string,
-}
-
 // Informed Consent
 
 export interface InformedConsent {
@@ -107,13 +98,4 @@ export interface KDQOL {
     kdqol_createdDate: string,
     kdqol_submittedDate: string,
     kdqol_batchLastRun: string,
-}
-
-// ---------------------------------------------------------------
-// NKF Clean Dataset
-// ---------------------------------------------------------------
-
-export interface NkfCleanData {
-    id: string;
-    [key: string]: any; 
 }
